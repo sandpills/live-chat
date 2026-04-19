@@ -1,6 +1,11 @@
 let socket;
 let words = [];
 
+const NUM_LANES = 8;
+const CROSS_SECONDS = 20;
+const TEXT_FILL = [255, 255, 255];   // white — swap to e.g. [255,0,0] if your key still catches it
+const TEXT_STROKE = [0, 0, 0];       // black outline
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   socket = io();
@@ -14,19 +19,23 @@ function mousePressed() {
 function draw() {
   background(0, 255, 0); // green screen for keying
   textFont('monaco');
-  textSize(20);
+  textSize(height / 20);
   textStyle(BOLD);
-  noStroke();
+  textAlign(CENTER, CENTER);
 
   for (let i = words.length - 1; i >= 0; i--) {
     words[i].moveAndDisplay();
-    if (words[i].x < -width) words.splice(i, 1);
+    if (words[i].x < -width * 0.2) words.splice(i, 1);
   }
 }
 
 function displayMessageFromUser(greeting) {
   if (typeof greeting !== 'string' || greeting.length === 0) return;
-  words.push(new Word(greeting, width, random(40, height - 40)));
+  const laneIndex = floor(random(NUM_LANES));
+  const laneHeight = height / NUM_LANES;
+  const pad = laneHeight * 0.15;
+  const y = laneIndex * laneHeight + random(pad, laneHeight - pad);
+  words.push(new Word(greeting, width, y));
   speakWithLang(greeting);
 }
 
@@ -58,14 +67,13 @@ class Word {
   }
 
   moveAndDisplay() {
-    const tWidth = textWidth(this.word);
-    rectMode(CENTER);
-    fill(255, 255, 0);
-    rect(this.x + 20, this.y - 30, tWidth + 20, 40);
-    fill(0);
-    textAlign(CENTER);
-    text(this.word, this.x + 20, this.y - 20);
-    this.x -= 3;
+    const ts = height / 23;
+    stroke(TEXT_STROKE);
+    strokeWeight(ts * 0.2);
+    fill(TEXT_FILL);
+    text(this.word, this.x, this.y);
+
+    this.x -= width / (CROSS_SECONDS * 60);
   }
 }
 
