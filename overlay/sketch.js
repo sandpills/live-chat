@@ -3,11 +3,15 @@ let words = [];
 
 const NUM_LANES = 8;
 const CROSS_SECONDS = 20;
-const TEXT_FILL = [255, 255, 255];   // white — swap to e.g. [255,0,0] if your key still catches it
-const TEXT_STROKE = [0, 0, 0];       // black outline
+const TEXT_FILL = [255, 255, 255];
+const TEXT_STROKE = [0, 0, 0];
+const FONT_STACK = "FusionPixel, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif";
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('20px FusionPixel');
+  }
   socket = io();
   socket.on('greetingFromUser', displayMessageFromUser);
 }
@@ -18,8 +22,8 @@ function mousePressed() {
 
 function draw() {
   background(0, 255, 0); // green screen for keying
-  textFont('monaco');
-  textSize(height / 20);
+  textFont(FONT_STACK);
+  textSize(max(10, round(height / 20 / 10) * 10));
   textStyle(BOLD);
   textAlign(CENTER, CENTER);
 
@@ -53,7 +57,7 @@ function playNextUtterance() {
   speaking = true;
   const text = speechQueue.shift();
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = /[\u4e00-\u9fff]/.test(text) ? 'zh-CN' : 'en-US';
+  utter.lang = /[一-鿿]/.test(text) ? 'zh-CN' : 'en-US';
   utter.onend = () => { speaking = false; playNextUtterance(); };
   utter.onerror = () => { speaking = false; playNextUtterance(); };
   window.speechSynthesis.speak(utter);
@@ -67,7 +71,7 @@ class Word {
   }
 
   moveAndDisplay() {
-    const ts = height / 23;
+    const ts = textSize();
     stroke(TEXT_STROKE);
     strokeWeight(ts * 0.2);
     fill(TEXT_FILL);

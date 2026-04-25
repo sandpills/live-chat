@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'FusionPixel';
+  src: url('fusion-pixel-10px-monospaced-zh_hans.ttf') format('truetype');
+}
 html, body {
   margin: 0;
   padding: 0;
