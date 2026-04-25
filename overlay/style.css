@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'FusionPixel';
-  src: url('fusion-pixel-10px-monospaced-zh_hans.ttf') format('truetype');
+  src: url('fusion-pixel-10px-monospaced-zh_hans.woff2') format('woff2');
 }
 html, body {
   margin: 0;

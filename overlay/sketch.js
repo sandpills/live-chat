@@ -9,9 +9,6 @@ const FONT_STACK = "FusionPixel, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Co
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  if (document.fonts && document.fonts.load) {
-    document.fonts.load('20px FusionPixel');
-  }
   socket = io();
   socket.on('greetingFromUser', displayMessageFromUser);
 }
